@@ -9,36 +9,40 @@ CREATE TABLE IF NOT EXISTS users (
   );
 
 CREATE TABLE IF NOT EXISTS artists (
-  artist_mbid text PRIMARY KEY NOT NULL,
+  artist_id int PRIMARY KEY NOT NULL,
   artist_name text,
   artist_iamge text
 );
 
 CREATE TABLE IF NOT EXISTS albums (
-  album_mbid text PRIMARY KEY NOT NULL,
+  album_id int PRIMARY KEY NOT NULL,
   album_name text,
   album_image text,
-  artist_mbid text,
-  CONSTRAINT fk_track_artist_mbid FOREIGN KEY (artist_mbid) REFERENCES artists (artist_mbid)
+  artist_id int,
+  CONSTRAINT fk_track_artist_id FOREIGN KEY (artist_id) REFERENCES artists (artist_id)
 );
 
 CREATE TABLE IF NOT EXISTS tracks (
-  track_mbid text PRIMARY KEY NOT NULL,
+  track_id int PRIMARY KEY NOT NULL,
   track_name text,
-  album_mbid text,
-  artist_mbid text,
-  CONSTRAINT fk_track_album_mbid FOREIGN KEY (album_mbid) REFERENCES albums (album_mbid),
-  CONSTRAINT fk_track_artist_mbid FOREIGN KEY (artist_mbid) REFERENCES artists (artist_mbid)
+  album_id int,
+  artist_id int,
+  CONSTRAINT fk_track_album_id FOREIGN KEY (album_id) REFERENCES albums (album_id),
+  CONSTRAINT fk_track_artist_id FOREIGN KEY (artist_id) REFERENCES artists (artist_id)
 );
 
 CREATE TABLE IF NOT EXISTS scrobbles (
   scrobble_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   user_id int,
-  track_mbid text,
+  track_id int,
   scrobble_time timestamptz,
   CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (user_id),
-  CONSTRAINT fk_track_mbid FOREIGN KEY (track_mbid) REFERENCES tracks (track_mbid)
+  CONSTRAINT fk_track_id FOREIGN KEY (track_id) REFERENCES tracks (track_id)
 );
+
+/* Because of Last.fm's unreliable Musicbrianz IDs, it would take way too much
+  work to get a good genre system working. I would like to do it at a later date
+  tho.
 
 CREATE TABLE IF NOT EXISTS genres (
   genre_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -47,9 +51,9 @@ CREATE TABLE IF NOT EXISTS genres (
 
 CREATE TABLE IF NOT EXISTS track_genres (
   relation_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  track_mbid text,
+  track_id int,
   genre_id int,
-  CONSTRAINT fk_track_mbid FOREIGN KEY (track_mbid) REFERENCES tracks (track_mbid),
+  CONSTRAINT fk_track_id FOREIGN KEY (track_id) REFERENCES tracks (track_id),
   CONSTRAINT fk_genre_id FOREIGN KEY (genre_id) REFERENCES genres (genre_id)
 );
-
+*/
